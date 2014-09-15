@@ -23,7 +23,7 @@ var MenuLayer = cc.Layer.extend({
 
 
         var Intro = new cc.LabelTTF("击爆痴呆球--脑力测试", "STHeiti Droidsansfallback Dengxian Microsoft JhengHei STHeiti", 30);
-        Intro.setColor(cc.color(0, 0, 0));
+        Intro.setColor(cc.color(231, 76, 60));
         Intro.setPosition(cc.p(size.width / 2, size.height - 50));
         this.addChild(Intro);
 
@@ -79,7 +79,7 @@ var menuSprite =cc.Sprite.extend({
 
         var drawnode = cc.DrawNode.create();
 
-        drawnode.drawRect(cc.p(0,0), cc.p(200,50), cc.color(0,0,0,255));
+        drawnode.drawRect(cc.p(0,0), cc.p(200,50), cc.color(231, 76, 60, 255));
 
         this.addChild(drawnode);
 

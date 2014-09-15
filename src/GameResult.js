@@ -169,7 +169,7 @@ var GameBtn = cc.Sprite.extend({
 
         var drawnode = cc.DrawNode.create();
 
-        drawnode.drawRect(cc.p(0,0), cc.p(300,50), cc.color(0,0,0,255));
+        drawnode.drawRect(cc.p(0,0), cc.p(300,50), cc.color(231, 76, 60, 255));
 
         this.addChild(drawnode);
 

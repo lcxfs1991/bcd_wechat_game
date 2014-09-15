@@ -6,7 +6,7 @@
 var StatusLayer = cc.Layer.extend({
 
     PlayScene: null,
-    gameNumber: 1,
+    gameNumber: 10,
     winGame: 0,
     failGame:0,
     clock: null,

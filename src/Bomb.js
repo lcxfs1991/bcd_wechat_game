@@ -7,6 +7,7 @@ var BombLayer = cc.Layer.extend({
 
     BombArray : [],
     BombCoordArray : [],
+    BombColorArray: [],
     randFigure: [],
     radius: 30,
     gap: 40,
@@ -20,6 +21,13 @@ var BombLayer = cc.Layer.extend({
         this._super();
         this.PlayScene = playScene;
         this.number = number;
+
+        this.BombColorArray[0] = cc.color(52, 152, 219);
+        this.BombColorArray[1] = cc.color(46, 204, 113);
+        this.BombColorArray[2] = cc.color(26, 188, 156);
+        this.BombColorArray[3] = cc.color(241, 196, 15);
+        this.BombColorArray[4] = cc.color(230, 126, 34);
+
     },
 
     createBomb: function(){
@@ -55,9 +63,11 @@ var BombLayer = cc.Layer.extend({
 
         cc.log("rand length"+this.randFigure);
 
+        var bombColor = this.BombColorArray[this.getRandom(0, 4)];
+
         for (var i = 0; i < this.number; i++){
 
-            var bomb = new Bomb(this, this.getCoord(this.BombCoordArray), this.randFigure[i]);
+            var bomb = new Bomb(this, this.getCoord(this.BombCoordArray), this.randFigure[i], bombColor);
 
             this.BombArray.push(bomb);
 
@@ -281,14 +291,14 @@ var Bomb = cc.Sprite.extend({
     BombLayer: null,
     MsgLabel: null,
 
-    ctor:function (BombLayer, coord, index) {
+    ctor:function (BombLayer, coord, index, bombColor) {
 
         this._super();
         this.BombLayer = BombLayer;
         this.index = index;
         var drawnode = cc.DrawNode.create();
 
-        drawnode.drawDot(cc.p(0, 0), this.radius, cc.color(0,0,0,255));
+        drawnode.drawDot(cc.p(0, 0), this.radius, bombColor);
 
         this.width = this.radius;
         this.height = this.radius;
