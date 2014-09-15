@@ -19,7 +19,7 @@ var BombLayer = cc.Layer.extend({
         this._super();
         this.PlayScene = playScene;
         this.number = number;
-        this.createBomb();
+//        this.createBomb();
 
     },
 
@@ -34,6 +34,37 @@ var BombLayer = cc.Layer.extend({
             this.addChild(bomb);
 
         }
+
+        this.hideIndex();
+    },
+
+    hideIndex: function(){
+
+        _totalTime = 2;
+        _updateRate = 0.1;
+
+        this.schedule(this.updateTime, _updateRate);
+
+    },
+
+    updateTime: function(){
+
+       _totalTime -= _updateRate;
+
+        var second = Math.round(_totalTime);
+
+        if (second == 0){
+            this.stopScheduler();
+            _totalTime = 2;
+
+            for (var i = 0; i < this.BombArray.length; i++){
+                this.BombArray[i].hideIndex();
+            }
+        }
+    },
+
+    stopScheduler: function(){
+        this.unschedule(this.updateNumber);
     },
 
     removeBomb: function(status){
@@ -51,10 +82,8 @@ var BombLayer = cc.Layer.extend({
         if (status == "win"){
             this.gameScore = this.number;
             this.number++;
-            this.PlayScene.statusLayer.renewTime(status);
         }
         else if (status == "fail"){
-            this.PlayScene.statusLayer.renewTime(status);
         }
 
         this.current = 0;
@@ -178,6 +207,7 @@ var Bomb = cc.Sprite.extend({
     index: null,
     radius: 30,
     BombLayer: null,
+    MsgLabel: null,
 
     ctor:function (BombLayer, coord, index) {
 
@@ -196,17 +226,23 @@ var Bomb = cc.Sprite.extend({
         this.addChild(drawnode);
         this.addIndex();
 
-        this.tab();
+//        this.tab();
 
     },
 
     addIndex: function(){
 
-        var MsgLabel = new cc.LabelTTF(this.index + 1, "STHeiti Droidsansfallback Dengxian Microsoft JhengHei STHeiti", 20);
-        MsgLabel.setColor(cc.color(255, 255, 255));
-        MsgLabel.setPosition(cc.p(0, 0));
-        this.addChild(MsgLabel);
+        this.MsgLabel = new cc.LabelTTF(this.index + 1, "STHeiti Droidsansfallback Dengxian Microsoft JhengHei STHeiti", 20);
+        this.MsgLabel.setColor(cc.color(255, 255, 255));
+        this.MsgLabel.setPosition(cc.p(0, 0));
+        this.addChild(this.MsgLabel);
     },
+
+    hideIndex: function(){
+        this.removeChild(this.MsgLabel);
+        this.tab();
+    },
+
     tab: function(){
 
         //Create a "one by one" touch event listener (processes one touch at a time)

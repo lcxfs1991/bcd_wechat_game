@@ -5,13 +5,6 @@
 
 var StatusLayer = cc.Layer.extend({
 
-    _labelNumber: 0,
-    _updateRate:0.1,
-    _totalTime:0.0,
-    updateNumber: 0.0,
-    TotalTime: 60.0,
-    number: 5.0,
-    diff: 5.0,
     PlayScene: null,
 
     ctor:function (playScene) {
@@ -20,33 +13,67 @@ var StatusLayer = cc.Layer.extend({
 
         this.PlayScene = playScene;
 
-        this.addTimer();
+        this.addClock();
 
         return true;
     },
 
-    addTimer: function(){
+    addClock: function(){
+        var clock = new Clock(this);
+
+        this.addChild(clock);
+    }
+
+});
+
+
+var Clock = cc.Sprite.extend({
+
+    radius: 50,
+    _labelNumber: 0,
+    _updateRate:0.1,
+    updateNumber: 0.0,
+    number: 3.0,
+    gap: 3.0,
+    StatusLayer: null,
+
+    ctor:function (statusLayer) {
+
+        this._super();
+
+        this.StatusLayer = statusLayer;
+
+        var drawnode = cc.DrawNode.create();
+
+        drawnode.drawDot(cc.p(0, 0), this.radius, cc.color(0,0,0,255));
+
+        this.width = this.radius;
+        this.height = this.radius;
 
         var size = cc.winSize;
 
+        this.x = size.width / 2 + this.radius / 2;
+        this.y = size.height / 2  + this.radius / 2;
+
+        this.addChild(drawnode);
+
+        this.countDown();
+
+    },
+
+    countDown: function(){
+        var size = cc.winSize;
+
         var labelName = ""+this.number;
-        _labelNumber = cc.LabelTTF.create(labelName, "Arial", 24);
+        _labelNumber = cc.LabelTTF.create(labelName, "Arial", 30);
         _labelNumber.setColor(cc.color(232, 0, 0));
-        _labelNumber.setPosition(cc.p(150, size.height - 20));
-
-        var totalTimeName = ""+this.TotalTime+"秒";
-        _totalTime = cc.LabelTTF.create(totalTimeName, "Arial", 32);
-        _totalTime.setColor(cc.color(0, 0, 0));
-        _totalTime.setPosition(cc.p(60, size.height - 20));
-
+        _labelNumber.setPosition(cc.p(0,0));
 
         _updateRate = 0.1;
 
         this.addChild(_labelNumber);
-        this.addChild(_totalTime);
 
         this.schedule(this.updateNumber, _updateRate);
-
     },
 
     stopScheduler: function(){
@@ -57,43 +84,17 @@ var StatusLayer = cc.Layer.extend({
 
         this.number -= _updateRate;
 
-        this.renewTime("normal");
-
         if(_labelNumber == null) return;
 
-        _labelNumber.setString(""+Math.round(this.number * 100)/100+" 秒");
-    },
+        var second = Math.round(this.number);
 
-    renewTime: function(status){
-
-        if (status == "win"){
-            this.TotalTime -= (this.diff - this.number);
-            this.number = (this.TotalTime > 5.0)? 5.0 : this.TotalTime;
-            this.diff = (this.TotalTime > 5.0)? 5.0 : this.TotalTime;
-            _totalTime.setString(""+Math.round(this.TotalTime * 1)/1+" 秒");
-        }
-        else if (this.number <= 0){
-            this.TotalTime -= (this.diff - this.number);
-
-            if (this.TotalTime <= 0){
-                this.stopScheduler();
-                _totalTime.setString("0秒");
-                _labelNumber.setString("0秒");
-
-                var scene = cc.Scene.create();
-                scene.addChild(new GameResultLayer(this.PlayScene.bombLayer.gameScore));
-                cc.director.runScene(cc.TransitionFade.create(1.2, scene));
-
-            }
-            else {
-                this.number = (this.TotalTime > 5.0)? 5.0 : this.TotalTime;
-                this.diff = (this.TotalTime > 5.0)? 5.0 : this.TotalTime;
-                _totalTime.setString(""+Math.round(this.TotalTime * 1)/1+" 秒");
-                this.PlayScene.bombLayer.removeBomb("fail");
-            }
-
+        if (second == 0){
+            this.stopScheduler();
+            this.StatusLayer.removeAllChildren();
+            this.StatusLayer.PlayScene.bombLayer.createBomb();
         }
 
+        _labelNumber.setString(""+second);
     }
 
-});
+})
