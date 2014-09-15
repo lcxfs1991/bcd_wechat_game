@@ -22,6 +22,16 @@ var MenuLayer = cc.Layer.extend({
         this.addChild(menu);
 
 
+        var Intro = new cc.LabelTTF("击爆痴呆球--脑力测试", "STHeiti Droidsansfallback Dengxian Microsoft JhengHei STHeiti", 30);
+        Intro.setColor(cc.color(0, 0, 0));
+        Intro.setPosition(cc.p(size.width / 2, size.height - 50));
+        this.addChild(Intro);
+
+        var Rule = new cc.LabelTTF("请按数字顺序从小到大击球，\n数字只会显示1秒", "STHeiti Droidsansfallback Dengxian Microsoft JhengHei STHeiti", 25);
+        Rule.setColor(cc.color(0, 0, 0));
+        Rule.setPosition(cc.p(size.width / 2, size.height - 150));
+        this.addChild(Rule);
+
         return true;
     },
 

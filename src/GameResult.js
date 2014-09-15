@@ -34,7 +34,9 @@ var GameResultLayer = cc.Layer.extend({
 
         var size = cc.winSize;
 
-        var result = "你的不痴呆指数是"+this.gameScore+"\n击败了全国选手\n关注不痴呆专业脑健康平台!\n";
+        var percent = Math.round(this.gameScore / 400 * 100);
+
+        var result = "你的不痴呆指数是"+this.gameScore+"\n击败了"+percent+"%全国选手\n关注不痴呆专业脑健康平台!\n";
         resultText = cc.LabelTTF.create(result, "Arial", 25);
         resultText.setColor(cc.color(0, 0, 0));
         resultText.setPosition(cc.p(size.width / 2, size.height / 2 + 200));
@@ -53,19 +55,19 @@ var GameResultLayer = cc.Layer.extend({
             this.onShare, this);
 
         this.followBtn = new cc.MenuItemSprite(
-            new GameBtn("抓住黄金干预期，请关注我们"),
-            new GameBtn("抓住黄金干预期，请关注我们"),
+            new GameBtn("关注不痴呆BCD公众号"),
+            new GameBtn("关注不痴呆BCD公众号"),
             this.onFollow, this);
 
 
         this.testBtn = new cc.MenuItemSprite(
-            new GameBtn("简易智能状态检测"),
-            new GameBtn("简易智能状态检测"),
+            new GameBtn("帮父母测脑力"),
+            new GameBtn("帮父母测脑力"),
             this.onTest, this);
 
         this.restartBtn = new cc.MenuItemSprite(
-            new GameBtn("重新开始"),
-            new GameBtn("重新开始"),
+            new GameBtn("重新评估"),
+            new GameBtn("重新评估"),
             this.onRestart, this);
 
 
