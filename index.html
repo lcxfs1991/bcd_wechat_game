@@ -25,7 +25,7 @@
         var Wechat = {
 
             imgUrl: 'http://leehey.org/bgame/res/logo.jpg',
-            lineLink:  'http://leehey.org/publish',
+            lineLink:  'http://leehey.org/bgame',
             descContent: "击爆痴呆球--脑力测试",
             shareTitle: "1分钟知道你的脑还够不够用"
         };
@@ -117,6 +117,9 @@
             });
         }, false);
 
+        var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+        document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5135d71ff4f743ccf5e3d0674623c4d0' type='text/javascript'%3E%3C/script%3E"));
+
 
     </script>
 </head>
@@ -125,6 +128,5 @@
 <canvas id="gameCanvas" width="400" height="600"></canvas>
 <script src="frameworks/cocos2d-html5/CCBoot.js"></script>
 <script src="main.js"></script>
-<img src="http://leehey.org/bgame/res/logo.jpg" style="display:hidden"/>
 </body>
 </html>
