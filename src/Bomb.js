@@ -87,7 +87,8 @@ var BombLayer = cc.Layer.extend({
         }
 
         this.current = 0;
-        this.createBomb();
+//        this.createBomb();
+        this.PlayScene.statusLayer.addClock();
 
     },
 
@@ -152,7 +153,6 @@ var BombLayer = cc.Layer.extend({
 
         }
         else {
-//            cc.log("fail");
             this.removeBomb("fail");
 
         }
@@ -225,8 +225,6 @@ var Bomb = cc.Sprite.extend({
 
         this.addChild(drawnode);
         this.addIndex();
-
-//        this.tab();
 
     },
 
