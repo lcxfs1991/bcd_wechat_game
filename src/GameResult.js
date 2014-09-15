@@ -8,12 +8,15 @@ var GameResultLayer = cc.Layer.extend({
     gameScore: 0,
     shareBtn: null,
     followBtn: null,
+    PlayScene: null,
 
-    ctor:function (gameScore) {
+    ctor:function (playScene) {
 
         this._super();
 
-        this.gameScore = gameScore;
+        this.PlayScene = playScene;
+
+        this.gameScore = this.PlayScene.statusLayer.winGame * 10 + this.PlayScene.statusLayer.failGame * 2;
 
         var size = cc.winSize;
         var bg = new bgSprite();
@@ -31,7 +34,7 @@ var GameResultLayer = cc.Layer.extend({
 
         var size = cc.winSize;
 
-        var result = "你打爆了"+this.gameScore+"个痴呆球\n抗痴呆指数级\n击败了全国选手\n爱父母就请关注我们!\n";
+        var result = "你的不痴呆指数是"+this.gameScore+"\n击败了全国选手\n关注不痴呆专业脑健康平台!\n";
         resultText = cc.LabelTTF.create(result, "Arial", 25);
         resultText.setColor(cc.color(0, 0, 0));
         resultText.setPosition(cc.p(size.width / 2, size.height / 2 + 200));
@@ -137,20 +140,21 @@ var GameResultLayer = cc.Layer.extend({
 
 });
 
-var GameResultScene = cc.Scene.extend({
-
-    onEnter:function () {
-        this._super();
-        this.initData();
-    },
-
-    initData: function(){
-
-        var gameResultLayer = new GameResultLayer();
-        this.addChild(gameResultLayer);
-
-    }
-});
+//var GameResultScene = cc.Scene.extend({
+//
+//
+//    onEnter:function () {
+//        this._super();
+//        this.initData();
+//    },
+//
+//    initData: function(){
+//
+//        var gameResultLayer = new GameResultLayer();
+//        this.addChild(gameResultLayer);
+//
+//    }
+//});
 
 
 var GameBtn = cc.Sprite.extend({

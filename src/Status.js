@@ -6,6 +6,13 @@
 var StatusLayer = cc.Layer.extend({
 
     PlayScene: null,
+    gameNumber: 1,
+    winGame: 0,
+    failGame:0,
+    clock: null,
+    _GameNumText: null,
+    _GameWinText: null,
+    _GameFailText: null,
 
     ctor:function (playScene) {
 
@@ -19,9 +26,64 @@ var StatusLayer = cc.Layer.extend({
     },
 
     addClock: function(){
-        var clock = new Clock(this);
 
-        this.addChild(clock);
+        cc.log(this.gameNumber);
+        this.updateGame();
+
+        if (this.gameNumber == 0){
+
+            var scene = cc.Scene.create();
+            scene.addChild(new GameResultLayer(this.PlayScene));
+            cc.director.runScene(cc.TransitionFade.create(1.2, scene));
+
+        }
+        else {
+
+            this.clock = new Clock(this);
+
+            this.addChild(this.clock);
+        }
+
+
+    },
+
+    updateGame: function(){
+
+        if (this._GameNumText){
+            this.removeChild(this._GameNumText);
+        }
+
+        if (this._GameWinText){
+            this.removeChild(this._GameWinText);
+        }
+
+        if (this._GameFailText){
+            this.removeChild(this._GameFailText);
+        }
+
+        var size = cc.winSize;
+
+        var GameNum = ""+this.gameNumber;
+        this._GameNumText = cc.LabelTTF.create(GameNum+" / 10 局", "Arial", 25);
+        this._GameNumText.setColor(cc.color(0, 0, 0));
+        this._GameNumText.setPosition(cc.p(80, size.height - 30));
+        this.addChild(this._GameNumText);
+
+        var WinNum = ""+this.winGame;
+        this._GameWinText = cc.LabelTTF.create("胜: "+WinNum, "Arial", 25);
+        this._GameWinText.setColor(cc.color(0, 0, 0));
+        this._GameWinText.setPosition(cc.p(200, size.height - 30));
+
+        this.addChild(this._GameWinText);
+
+        var FailNum = ""+this.failGame;
+        this._GameFailText = cc.LabelTTF.create("负: "+FailNum, "Arial", 25);
+        this._GameFailText.setColor(cc.color(0, 0, 0));
+        this._GameFailText.setPosition(cc.p(280, size.height - 30));
+
+        this.addChild(this._GameFailText);
+
+
     }
 
 });
@@ -90,7 +152,7 @@ var Clock = cc.Sprite.extend({
 
         if (second == 0){
             this.stopScheduler();
-            this.StatusLayer.removeAllChildren();
+            this.StatusLayer.removeChild(this.StatusLayer.clock);
             this.StatusLayer.PlayScene.bombLayer.createBomb();
         }
 

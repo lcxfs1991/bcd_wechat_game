@@ -20,8 +20,6 @@ var BombLayer = cc.Layer.extend({
         this._super();
         this.PlayScene = playScene;
         this.number = number;
-//        this.createBomb();
-
     },
 
     createBomb: function(){
@@ -184,9 +182,11 @@ var BombLayer = cc.Layer.extend({
 
             this.current++;
             if (this.current == this.number){
-//                this.removeBomb("win");
                 this.number++;
                 this.waitNext("win");
+
+                this.PlayScene.statusLayer.gameNumber--;
+                this.PlayScene.statusLayer.winGame++;
 
                 return "win";
             }
@@ -195,8 +195,11 @@ var BombLayer = cc.Layer.extend({
 
         }
         else {
-//            this.removeBomb("fail");
             this.waitNext("fail");
+
+            this.PlayScene.statusLayer.gameNumber--;
+            this.PlayScene.statusLayer.failGame++;
+
             return "fail";
 
         }
@@ -271,23 +274,6 @@ var BombLayer = cc.Layer.extend({
 });
 
 
-//var Rectangle = cc.Sprite.extend({
-//    ctor:function(){
-//        this._super();
-//
-//        this.x = 50;
-//        this.y = 50;
-//        this.width = 100;
-//        this.height = 100;
-//
-//        var dt = cc.DrawNode.create();
-//        dt.drawDot(cc.p(100,100), 30, cc.color(100,100,100,255));
-////        dt.drawRect(cc.p(0,0), cc.p(100, 100), cc.color(100,100, 100, 255));
-//        this.addChild(dt);
-//
-//    }
-//});
-
 var Bomb = cc.Sprite.extend({
 
     index: null,
@@ -346,7 +332,6 @@ var Bomb = cc.Sprite.extend({
 
                 //Check the click area
                 if (cc.rectContainsPoint(rect, locationInNode)) {
-//                    cc.log("sprite began... x = " + locationInNode.x + ", y = " + locationInNode.y);
 
                     var result = target.BombLayer.checkNum(target.index);
 
@@ -368,7 +353,7 @@ var Bomb = cc.Sprite.extend({
             //Process the touch end event
             onTouchEnded: function (touch, event) {
                 var target = event.getCurrentTarget();
-                
+
                 target.removeAllChildren();
                 target.parent.removeChild(target);
             }
