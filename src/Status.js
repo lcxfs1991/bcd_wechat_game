@@ -27,7 +27,7 @@ var StatusLayer = cc.Layer.extend({
 
     addClock: function(){
 
-        cc.log(this.gameNumber);
+//        cc.log(this.gameNumber);
         this.updateGame();
 
         if (this.gameNumber == 0){
@@ -38,6 +38,8 @@ var StatusLayer = cc.Layer.extend({
 
         }
         else {
+
+            this.clock = null;
 
             this.clock = new Clock(this);
 
@@ -138,10 +140,6 @@ var Clock = cc.Sprite.extend({
         this.schedule(this.updateNumber, _updateRate);
     },
 
-    stopScheduler: function(){
-        this.unschedule(this.updateNumber);
-    },
-
     updateNumber:function() {
 
         this.number -= _updateRate;
@@ -150,8 +148,8 @@ var Clock = cc.Sprite.extend({
 
         var second = Math.round(this.number);
 
-        if (second == 0){
-            this.stopScheduler();
+        if (second <= 0){
+            this.unschedule(this.updateNumber);
             this.StatusLayer.removeChild(this.StatusLayer.clock);
             this.StatusLayer.PlayScene.bombLayer.createBomb();
         }

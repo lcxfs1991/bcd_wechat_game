@@ -13,8 +13,10 @@ var BombLayer = cc.Layer.extend({
     gap: 40,
     current: 0,
     number: 0,
+    _waitTime: 1.0,
     gameScore: 0,
     PlayScene: null,
+    status: null,
 
     ctor:function (playScene, number) {
 
@@ -61,7 +63,7 @@ var BombLayer = cc.Layer.extend({
             return a - b;
         });
 
-        cc.log("rand length"+this.randFigure);
+//        cc.log("rand length"+this.randFigure);
 
         var bombColor = this.BombColorArray[this.getRandom(0, 4)];
 
@@ -93,18 +95,14 @@ var BombLayer = cc.Layer.extend({
 
         var second = Math.round(_totalTime);
 
-        if (second == 0){
-            this.stopScheduler("updateTime");
+        if (second <= 0){
+            this.unschedule(this.updateTime);
             _totalTime = 2;
 
             for (var i = 0; i < this.BombArray.length; i++){
                 this.BombArray[i].hideIndex();
             }
         }
-    },
-
-    stopScheduler: function(func){
-        this.unschedule(this[func]);
     },
 
     removeBomb: function(status){
@@ -121,15 +119,7 @@ var BombLayer = cc.Layer.extend({
             this.randFigure.pop();
         }
 
-        if (status == "win"){
-            this.gameScore = this.number;
-            this.number++;
-        }
-        else if (status == "fail"){
-        }
-
         this.current = 0;
-//        this.createBomb();
         this.PlayScene.statusLayer.addClock();
 
     },
@@ -186,7 +176,7 @@ var BombLayer = cc.Layer.extend({
 
     checkNum: function(index){
 
-        cc.log(index+"-"+this.randFigure.indexOf(index));
+//        cc.log(index+"-"+this.randFigure.indexOf(index));
 
         if (this.randFigure.indexOf(index) == this.current){
 
@@ -217,23 +207,26 @@ var BombLayer = cc.Layer.extend({
     },
 
     waitNext: function(status){
-        _waitTime = 1;
+//        _waitTime = 1;
         _updateRate = 0.1;
+        this.status = status;
 
-        this.schedule(this.updateNext, _updateRate, status);
+        this.schedule(this.updateNext);
     },
 
     updateNext: function(){
 
-        _waitTime -= _updateRate;
+//        cc.log(this.status);
 
-        var second = Math.round(_waitTime);
+        this._waitTime -= 0.1;
 
-        if (second == 0){
-            this.stopScheduler("updateNext");
-            _waitTime = 1;
+        var second = Math.round(this._waitTime);
 
-            this.removeBomb(status);
+        if (second <= 0){
+            this.unschedule(this.updateNext);
+            this._waitTime = 1.0;
+
+            this.removeBomb(this.status);
         }
 
     },
@@ -250,6 +243,7 @@ var BombLayer = cc.Layer.extend({
         );
 
         explode.runAction(explodeAni);
+
         this.addChild(explode);
 
         var explodeAniRev = cc.sequence(
@@ -258,6 +252,7 @@ var BombLayer = cc.Layer.extend({
         );
 
         explode.runAction(explodeAniRev);
+
         explode.release();
     },
 
@@ -307,6 +302,8 @@ var Bomb = cc.Sprite.extend({
 
         this.addChild(drawnode);
         this.addIndex();
+
+//        this.tab();
 
     },
 

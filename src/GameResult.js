@@ -9,6 +9,7 @@ var GameResultLayer = cc.Layer.extend({
     shareBtn: null,
     followBtn: null,
     PlayScene: null,
+    Msg: null,
 
     ctor:function (playScene) {
 
@@ -36,10 +37,16 @@ var GameResultLayer = cc.Layer.extend({
 
         var percent = Math.round(this.gameScore / 400 * 100);
 
-        var result = "你的不痴呆指数是"+this.gameScore+"\n击败了"+percent+"%全国选手\n关注不痴呆专业脑健康平台!\n";
-        resultText = cc.LabelTTF.create(result, "Arial", 25);
+        this.Msg = "你的不痴呆指数是"+this.gameScore+"。\n击败了"+percent+"%全国选手。\n关注不痴呆专业脑健康平台!\n";
+        resultText = cc.LabelTTF.create(this.Msg, "Arial", 25);
         resultText.setColor(cc.color(0, 0, 0));
         resultText.setPosition(cc.p(size.width / 2, size.height / 2 + 200));
+
+
+        document.title = this.Msg;
+        Wechat.descContent = this.Msg;
+        Wechat.shareTitle = this.Msg;
+
 
         this.addChild(resultText);
 
@@ -141,22 +148,6 @@ var GameResultLayer = cc.Layer.extend({
     }
 
 });
-
-//var GameResultScene = cc.Scene.extend({
-//
-//
-//    onEnter:function () {
-//        this._super();
-//        this.initData();
-//    },
-//
-//    initData: function(){
-//
-//        var gameResultLayer = new GameResultLayer();
-//        this.addChild(gameResultLayer);
-//
-//    }
-//});
 
 
 var GameBtn = cc.Sprite.extend({
