@@ -7,6 +7,7 @@ var BombLayer = cc.Layer.extend({
 
     BombArray : [],
     BombCoordArray : [],
+    randFigure: [],
     radius: 30,
     gap: 40,
     current: 0,
@@ -25,9 +26,40 @@ var BombLayer = cc.Layer.extend({
 
     createBomb: function(){
 
+        var figure = null;
+        var duplicate = false;
+
+        var numberPicker = [];
+
+        for (var i = 1; i <=15; i++){
+            numberPicker[i - 1] = i;
+        }
+
+        var pickerNum = 14;
+        var index = null;
+
         for (var i = 0; i < this.number; i++){
 
-            var bomb = new Bomb(this, this.getCoord(this.BombCoordArray), i);
+            index = this.getRandom(0, pickerNum);
+
+            this.randFigure.push(numberPicker[index]);
+
+            numberPicker.splice(index, 1);
+
+            pickerNum--;
+
+        }
+
+        this.randFigure.sort(function(a, b){
+
+            return a - b;
+        });
+
+        cc.log("rand length"+this.randFigure);
+
+        for (var i = 0; i < this.number; i++){
+
+            var bomb = new Bomb(this, this.getCoord(this.BombCoordArray), this.randFigure[i]);
 
             this.BombArray.push(bomb);
 
@@ -54,7 +86,7 @@ var BombLayer = cc.Layer.extend({
         var second = Math.round(_totalTime);
 
         if (second == 0){
-            this.stopScheduler();
+            this.stopScheduler("updateTime");
             _totalTime = 2;
 
             for (var i = 0; i < this.BombArray.length; i++){
@@ -63,8 +95,8 @@ var BombLayer = cc.Layer.extend({
         }
     },
 
-    stopScheduler: function(){
-        this.unschedule(this.updateNumber);
+    stopScheduler: function(func){
+        this.unschedule(this[func]);
     },
 
     removeBomb: function(status){
@@ -73,10 +105,12 @@ var BombLayer = cc.Layer.extend({
 
         for (var i = 0; i < this.BombArray.length; i++){
             this.BombArray.pop();
+
+            this.BombCoordArray.pop();
         }
 
-        for (var i = 0; i < this.BombCoordArray.length; i++){
-            this.BombCoordArray.pop();
+        for (var i = 0; i < this.number; i++){
+            this.randFigure.pop();
         }
 
         if (status == "win"){
@@ -144,17 +178,49 @@ var BombLayer = cc.Layer.extend({
 
     checkNum: function(index){
 
-        if (index == this.current){
+        cc.log(index+"-"+this.randFigure.indexOf(index));
+
+        if (this.randFigure.indexOf(index) == this.current){
 
             this.current++;
             if (this.current == this.number){
-                this.removeBomb("win");
+//                this.removeBomb("win");
+                this.number++;
+                this.waitNext("win");
+
+                return "win";
             }
+
+            return "normal";
 
         }
         else {
-            this.removeBomb("fail");
+//            this.removeBomb("fail");
+            this.waitNext("fail");
+            return "fail";
 
+        }
+
+    },
+
+    waitNext: function(status){
+        _waitTime = 1;
+        _updateRate = 0.1;
+
+        this.schedule(this.updateNext, _updateRate, status);
+    },
+
+    updateNext: function(){
+
+        _waitTime -= _updateRate;
+
+        var second = Math.round(_waitTime);
+
+        if (second == 0){
+            this.stopScheduler("updateNext");
+            _waitTime = 1;
+
+            this.removeBomb(status);
         }
 
     },
@@ -180,6 +246,26 @@ var BombLayer = cc.Layer.extend({
 
         explode.runAction(explodeAniRev);
         explode.release();
+    },
+
+    cross: function(x, y){
+
+        var cross = cc.Sprite.create(res.Cross_png);
+        cross.setPosition(cc.p(x, y));
+
+        var crossAni = cc.sequence(
+            cc.fadeOut(0.3),
+            cc.fadeIn(0.3),
+            cc.fadeOut(0.3),
+            cc.fadeIn(0.3),
+            cc.fadeOut(0.3)
+        );
+
+        cross.runAction(crossAni);
+        this.addChild(cross);
+
+        cross.release();
+
     }
 
 });
@@ -230,7 +316,7 @@ var Bomb = cc.Sprite.extend({
 
     addIndex: function(){
 
-        this.MsgLabel = new cc.LabelTTF(this.index + 1, "STHeiti Droidsansfallback Dengxian Microsoft JhengHei STHeiti", 20);
+        this.MsgLabel = new cc.LabelTTF(this.index, "STHeiti Droidsansfallback Dengxian Microsoft JhengHei STHeiti", 20);
         this.MsgLabel.setColor(cc.color(255, 255, 255));
         this.MsgLabel.setPosition(cc.p(0, 0));
         this.addChild(this.MsgLabel);
@@ -262,7 +348,15 @@ var Bomb = cc.Sprite.extend({
                 if (cc.rectContainsPoint(rect, locationInNode)) {
 //                    cc.log("sprite began... x = " + locationInNode.x + ", y = " + locationInNode.y);
 
-                    target.BombLayer.checkNum(target.index);
+                    var result = target.BombLayer.checkNum(target.index);
+
+                    if (result == "fail"){
+                        target.parent.cross(target.getPosition().x, target.getPosition().y);
+                    }
+                    else {
+                        target.parent.explode(target.getPosition().x, target.getPosition().y);
+                    }
+
                     return true;
                 }
                 return false;
@@ -274,8 +368,7 @@ var Bomb = cc.Sprite.extend({
             //Process the touch end event
             onTouchEnded: function (touch, event) {
                 var target = event.getCurrentTarget();
-
-                target.parent.explode(target.getPosition().x, target.getPosition().y);
+                
                 target.removeAllChildren();
                 target.parent.removeChild(target);
             }
