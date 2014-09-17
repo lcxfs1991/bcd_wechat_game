@@ -182,7 +182,20 @@ var BombLayer = cc.Layer.extend({
 
             this.current++;
             if (this.current == this.number){
+
                 this.number++;
+
+                var gameNum = this.PlayScene.statusLayer.gameNumber;
+                cc.log(gameNum);
+                if (gameNum >= 6 && gameNum <= 9){
+                    this.number = 4;
+                }
+                else if (gameNum >= 3 && gameNum <= 5){
+                    this.number = 5;
+                }
+
+
+
                 this.waitNext("win");
 
                 this.PlayScene.statusLayer.gameNumber--;
