@@ -37,18 +37,33 @@ var GameResultLayer = cc.Layer.extend({
 
         var percent = this.getPercent(this.gameScore);
 
-        this.Msg = "拼脑力, 你的\"不痴呆\"指数是"+this.gameScore+"。\n击败了"+percent+"%全国选手。\n关注不痴呆专业脑健康平台!\n今天是中华老年痴呆防治日,\n爱父母，从关注脑健康开始。";
+        var word = "";
+
+        if (this.gameScore < 60){
+            word = "亲，少看脑残片。";
+        }
+        else if (this.gameScore >= 60 && this.gameScore <= 75){
+            word = "鉴定完毕，你是地球人。";
+        }
+        else if (this.gameScore >= 75 && this.gameScore <= 90){
+            word = "你不是马云，就是都叫兽。";
+        }
+        else if (this.gameScore > 90){
+            word = "你，你开挂了吗?";
+        }
+
+        this.Msg = word+"\n你的\"不痴呆\"指数是"+this.gameScore+"。\n击败了"+percent+"%全国选手。\n10月2日是重阳节,\n孝敬长者,勿忘关注脑健康,\n关注\"不痴呆BCD\"公众号!\n";
         resultText = cc.LabelTTF.create(this.Msg, "Arial", 25);
         resultText.setColor(cc.color(0, 0, 0));
-        resultText.setPosition(cc.p(size.width / 2, size.height / 2 + 200));
+        resultText.setPosition(cc.p(size.width / 2, size.height / 2 + 170));
 
-        var imgUrl = 'http://buchidai.org/bgame/res/logo.png';
-        var lineLink = 'http://buchidai.org/bgame/';
-        Wechat.descContent = "拼脑力, 我的\"不痴呆\"指数是"+this.gameScore+"。\n击败了"+percent+"%全国选手。\n关注不痴呆专业脑健康平台!\n今天是中华老年痴呆防治日,\n爱父母，从关注脑健康开始。";
+        Wechat.imgUrl = 'http://buchidai.org/bgame/res/logo.png';
+        Wechat.lineLink = 'http://buchidai.org/bgame/';
+        Wechat.descContent = word+"\n我的\"不痴呆\"指数是"+this.gameScore+"。\n击败了"+percent+"%全国选手。\n10月2日是重阳节,\n孝敬长者,勿忘关注脑健康。";
         Wechat.shareTitle = Wechat.descContent;
         document.title = Wechat.descContent;
 
-        shareTimeline(imgUrl, lineLink, Wechat.descContent, Wechat.shareTitle);
+        shareTimeline(Wechat.imgUrl, Wechat.lineLink, Wechat.descContent, Wechat.shareTitle);
 
         this.addChild(resultText);
 
@@ -106,19 +121,19 @@ var GameResultLayer = cc.Layer.extend({
 
 
         var menu1 = cc.Menu.create(this.shareBtn);
-        menu1.setPosition(cc.p(size.width / 2, size.height / 2 + 80));
+        menu1.setPosition(cc.p(size.width / 2, size.height / 2 + 60));
         this.addChild(menu1);
 
         var menu2 = cc.Menu.create(this.testBtn);
-        menu2.setPosition(cc.p(size.width / 2, size.height / 2));
+        menu2.setPosition(cc.p(size.width / 2, size.height / 2 - 20));
         this.addChild(menu2);
 
         var menu3 = cc.Menu.create(this.followBtn);
-        menu3.setPosition(cc.p(size.width / 2, size.height / 2 - 80));
+        menu3.setPosition(cc.p(size.width / 2, size.height / 2 - 100));
         this.addChild(menu3);
 
         var menu4 = cc.Menu.create(this.restartBtn);
-        menu4.setPosition(cc.p(size.width / 2, size.height / 2 - 160));
+        menu4.setPosition(cc.p(size.width / 2, size.height / 2 - 180));
         this.addChild(menu4);
 
 

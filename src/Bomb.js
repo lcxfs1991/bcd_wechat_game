@@ -39,11 +39,11 @@ var BombLayer = cc.Layer.extend({
 
         var numberPicker = [];
 
-        for (var i = 1; i <=15; i++){
+        for (var i = 1; i <=10; i++){
             numberPicker[i - 1] = i;
         }
 
-        var pickerNum = 14;
+        var pickerNum = 9;
         var index = null;
 
         for (var i = 0; i < this.number; i++){
@@ -187,10 +187,10 @@ var BombLayer = cc.Layer.extend({
 
                 var gameNum = this.PlayScene.statusLayer.gameNumber;
                 cc.log(gameNum);
-                if (gameNum >= 6 && gameNum <= 9){
+                if (gameNum >= 5 && gameNum <= 9){
                     this.number = 4;
                 }
-                else if (gameNum >= 3 && gameNum <= 5){
+                else if (gameNum >= 3 && gameNum <= 4){
                     this.number = 5;
                 }
 

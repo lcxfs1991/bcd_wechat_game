@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>击爆痴呆球--脑力测试</title>
+    <title>击爆痴呆球(新版)--脑力测试</title>
     <link rel="icon" type="image/GIF" href="http://buchidai.org/bgame/res/logo.png"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="full-screen" content="yes"/>
@@ -26,20 +26,20 @@
 
             imgUrl: 'http://buchidai.org/bgame/res/logo.png',
             lineLink:  'http://buchidai.org/bgame/',
-            descContent: "击爆痴呆球--脑力测试",
+            descContent: "击爆痴呆球(新版)--脑力测试",
             shareTitle: "一分钟测出你的脑力"
         };
 
 
         function shareFriend(imgUrl1, lineLink1, descContent1, shareTitle1) {
 
-            var imgUrl = imgUrl1;
+            var imgUrl = Wechat.imgUrl;
             var lineLink = lineLink1;
             var descContent = descContent1;
             var shareTitle = shareTitle1;
 
             WeixinJSBridge.invoke('sendAppMessage',{
-                "img_url": imgUrl,
+                "img_url": Wechat.imgUrl,
                 "img_width": "640",
                 "img_height": "640",
                 "link": lineLink,
@@ -51,7 +51,7 @@
         }
         function shareTimeline(imgUrl1, lineLink1, descContent1, shareTitle1) {
 
-            var imgUrl = imgUrl1;
+            var imgUrl = Wechat.imgUrl;
             var lineLink = lineLink1;
             var descContent = descContent1;
             var shareTitle = shareTitle1;
@@ -61,7 +61,7 @@
             if (navigator.userAgent.indexOf("MicroMessenger") > -1 && typeof WeixinJSBridge !== undefined){
 
                 WeixinJSBridge.invoke('shareTimeline',{
-                    "img_url": imgUrl,
+                    "img_url": Wechat.imgUrl,
                     "img_width": "640",
                     "img_height": "640",
                     "link": lineLink,
